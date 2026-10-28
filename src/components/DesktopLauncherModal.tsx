@@ -9,11 +9,7 @@ import {
   Check,
   ExternalLink,
   QrCode,
-  AlertCircle,
-  HelpCircle,
-  ArrowRight,
-  Terminal,
-  UploadCloud
+  Github
 } from 'lucide-react';
 
 interface DesktopLauncherModalProps {
@@ -21,18 +17,17 @@ interface DesktopLauncherModalProps {
   onClose: () => void;
 }
 
-const CLOUD_APP_URL = 'https://ais-pre-ezbgcdvhap7ckr7j6o3v5q-319735497040.europe-west2.run.app';
+// GitHub Pages URL of the application
+const GITHUB_PAGES_URL = 'https://hh5342.github.io/cronotask-/';
 
 export const DesktopLauncherModal: React.FC<DesktopLauncherModalProps> = ({ isOpen, onClose }) => {
   const [copiedLink, setCopiedLink] = useState(false);
-  const [copiedBashCmd, setCopiedBashCmd] = useState(false);
   const [qrCodeDataUrl, setQrCodeDataUrl] = useState<string>('');
-  const [showExplanation, setShowExplanation] = useState(true);
 
   useEffect(() => {
     if (isOpen) {
-      QRCode.toDataURL(CLOUD_APP_URL, {
-        width: 200,
+      QRCode.toDataURL(GITHUB_PAGES_URL, {
+        width: 260,
         margin: 2,
         color: {
           dark: '#09090b',
@@ -48,23 +43,15 @@ export const DesktopLauncherModal: React.FC<DesktopLauncherModalProps> = ({ isOp
 
   const handleCopyUrl = () => {
     if (navigator.clipboard) {
-      navigator.clipboard.writeText(CLOUD_APP_URL);
+      navigator.clipboard.writeText(GITHUB_PAGES_URL);
       setCopiedLink(true);
       setTimeout(() => setCopiedLink(false), 3000);
     }
   };
 
-  const handleCopyBashCmd = () => {
-    if (navigator.clipboard) {
-      navigator.clipboard.writeText('chmod +x iniciar_mac.command && ./iniciar_mac.command');
-      setCopiedBashCmd(true);
-      setTimeout(() => setCopiedBashCmd(false), 3000);
-    }
-  };
-
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-in fade-in duration-200">
-      <div className="bg-neutral-900 border border-neutral-800 rounded-2xl w-full max-w-xl shadow-2xl overflow-hidden flex flex-col max-h-[92vh]">
+      <div className="bg-neutral-900 border border-neutral-800 rounded-2xl w-full max-w-lg shadow-2xl overflow-hidden flex flex-col max-h-[92vh]">
         {/* Header */}
         <div className="flex items-center justify-between px-6 py-4 border-b border-neutral-800">
           <div className="flex items-center gap-2.5">
@@ -72,9 +59,9 @@ export const DesktopLauncherModal: React.FC<DesktopLauncherModalProps> = ({ isOp
               <Smartphone className="w-4 h-4" />
             </div>
             <div>
-              <h3 className="text-base font-semibold text-white">Activar en iPhone y Mac</h3>
+              <h3 className="text-base font-semibold text-white">Abrir en tu iPhone (Código QR)</h3>
               <p className="text-xs text-neutral-400">
-                Solución a «Page not found» y privilegios en macOS
+                Enlace directo y permanente en GitHub Pages
               </p>
             </div>
           </div>
@@ -88,40 +75,52 @@ export const DesktopLauncherModal: React.FC<DesktopLauncherModalProps> = ({ isOp
 
         {/* Content */}
         <div className="p-6 space-y-5 overflow-y-auto">
-          {/* PASO CLAVE: Botón Publish */}
-          <div className="p-4 bg-amber-500/10 border border-amber-500/30 rounded-xl space-y-2.5">
-            <div className="flex items-center gap-2 text-xs font-semibold text-amber-400">
-              <UploadCloud className="w-4 h-4 shrink-0" />
-              <span>PASO IMPORTANTE: ¿Por qué salía «Page not found»?</span>
+          {/* Card QR Principal para iPhone */}
+          <div className="p-5 bg-neutral-950 border border-emerald-500/40 rounded-2xl flex flex-col items-center text-center space-y-4">
+            <div className="flex items-center gap-2 text-xs font-semibold text-emerald-400">
+              <Sparkles className="w-4 h-4" />
+              <span>Apunta con la Cámara de tu iPhone</span>
             </div>
-            <p className="text-xs text-neutral-200 leading-relaxed">
-              El enlace en la nube da <em>«Page not found»</em> porque la aplicación está en modo borrador. Para activarla públicamente para tu iPhone:
-            </p>
-            <div className="p-3 bg-neutral-950 border border-neutral-800 rounded-lg text-xs space-y-2">
-              <div className="flex items-start gap-2 text-neutral-300">
-                <span className="w-5 h-5 rounded-full bg-amber-400 text-neutral-950 font-bold flex items-center justify-center text-[11px] shrink-0">1</span>
-                <span>Mira <strong>arriba a la derecha</strong> en la pantalla de Google AI Studio (junto a los botones <em>Remix</em> y <em>Share</em>).</span>
+
+            {/* QR Code Container */}
+            <div className="bg-white p-3 rounded-2xl shadow-xl ring-4 ring-emerald-500/20">
+              {qrCodeDataUrl ? (
+                <img
+                  src={qrCodeDataUrl}
+                  alt="QR para abrir Cronotask en iPhone"
+                  className="w-48 h-48 sm:w-56 sm:h-56 object-contain"
+                />
+              ) : (
+                <div className="w-48 h-48 sm:w-56 sm:h-56 bg-neutral-100 rounded-xl flex items-center justify-center text-neutral-400">
+                  <QrCode className="w-12 h-12" />
+                </div>
+              )}
+            </div>
+
+            {/* Pasos en iPhone */}
+            <div className="w-full bg-neutral-900/90 border border-neutral-800 rounded-xl p-3 text-left space-y-2 text-xs text-neutral-300">
+              <div className="font-semibold text-white flex items-center gap-1.5">
+                <Smartphone className="w-3.5 h-3.5 text-sky-400" />
+                <span>Cómo instalarla como App en tu iPhone:</span>
               </div>
-              <div className="flex items-start gap-2 text-neutral-300">
-                <span className="w-5 h-5 rounded-full bg-amber-400 text-neutral-950 font-bold flex items-center justify-center text-[11px] shrink-0">2</span>
-                <span>Haz clic en el botón blanco <strong>«Publish»</strong>.</span>
-              </div>
-              <div className="flex items-start gap-2 text-neutral-300">
-                <span className="w-5 h-5 rounded-full bg-amber-400 text-neutral-950 font-bold flex items-center justify-center text-[11px] shrink-0">3</span>
-                <span>¡Listo! Google desplegará el servidor público y el enlace web funcionará de inmediato en cualquier dispositivo.</span>
-              </div>
+              <ol className="list-decimal list-inside space-y-1 text-neutral-300 text-[11px] leading-relaxed">
+                <li>Abre la app <strong>Cámara</strong> de tu iPhone y enfoca el código QR.</li>
+                <li>Toca el aviso amarillo para abrirlo en <strong>Safari</strong>.</li>
+                <li>En la barra inferior de Safari, pulsa el botón <strong>Compartir</strong> (cuadrado con flecha ↑).</li>
+                <li>Desliza y selecciona <strong>«Añadir a pantalla de inicio»</strong>.</li>
+              </ol>
             </div>
           </div>
 
-          {/* Enlace y QR para iPhone */}
-          <div className="p-4 bg-neutral-950 border border-emerald-500/30 rounded-xl space-y-3">
+          {/* Enlace de texto directo */}
+          <div className="p-4 bg-neutral-950 border border-neutral-800 rounded-xl space-y-2.5">
             <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2 text-xs font-semibold text-emerald-400">
-                <Smartphone className="w-4 h-4 shrink-0" />
-                <span>Enlace Web Público (Tras pulsar «Publish»)</span>
+              <div className="flex items-center gap-1.5 text-xs font-semibold text-neutral-300">
+                <Github className="w-3.5 h-3.5 text-white" />
+                <span>Enlace de GitHub Pages</span>
               </div>
               <span className="text-[10px] bg-emerald-500/20 text-emerald-300 font-mono px-2 py-0.5 rounded">
-                Para iPhone y Safari
+                Activo
               </span>
             </div>
 
@@ -129,7 +128,7 @@ export const DesktopLauncherModal: React.FC<DesktopLauncherModalProps> = ({ isOp
               <input
                 type="text"
                 readOnly
-                value={CLOUD_APP_URL}
+                value={GITHUB_PAGES_URL}
                 className="flex-1 px-3 py-2 bg-neutral-900 border border-neutral-800 rounded-lg text-xs text-emerald-300 font-mono select-all focus:outline-none"
               />
               <div className="flex items-center gap-2">
@@ -141,82 +140,37 @@ export const DesktopLauncherModal: React.FC<DesktopLauncherModalProps> = ({ isOp
                   <span>{copiedLink ? 'Copiado' : 'Copiar'}</span>
                 </button>
                 <a
-                  href={CLOUD_APP_URL}
+                  href={GITHUB_PAGES_URL}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="px-3.5 py-2 bg-neutral-800 hover:bg-neutral-700 text-white rounded-lg text-xs font-medium transition-colors flex items-center justify-center gap-1.5 cursor-pointer whitespace-nowrap"
                 >
                   <ExternalLink className="w-3.5 h-3.5" />
-                  <span>Probar</span>
+                  <span>Abrir</span>
                 </a>
-              </div>
-            </div>
-
-            {/* QR Scan */}
-            <div className="flex items-center gap-4 pt-2 border-t border-neutral-900">
-              {qrCodeDataUrl && (
-                <div className="bg-white p-1.5 rounded-lg shrink-0 shadow">
-                  <img src={qrCodeDataUrl} alt="QR iPhone" className="w-20 h-20 object-contain" />
-                </div>
-              )}
-              <div className="text-xs text-neutral-400 space-y-1">
-                <p className="font-semibold text-neutral-200">Cómo añadirlo como app en iPhone:</p>
-                <p>1. Escanea el QR con la cámara de tu iPhone o abre el enlace en Safari.</p>
-                <p>2. Pulsa el botón <strong>Compartir</strong> (cuadrado con flecha ↑).</p>
-                <p>3. Pulsa <strong>«Añadir a pantalla de inicio»</strong>.</p>
               </div>
             </div>
           </div>
 
-          {/* Solución a Privilegios en Mac Local */}
-          <div className="p-4 bg-neutral-950 border border-neutral-800 rounded-xl space-y-3">
-            <div className="flex items-center gap-2 text-xs font-semibold text-sky-400">
-              <Terminal className="w-4 h-4 shrink-0" />
-              <span>Si descargaste el código a tu Mac («careces de privilegios de acceso»)</span>
-            </div>
-
-            <div className="text-xs text-neutral-300 space-y-2 leading-relaxed">
-              <p>
-                En macOS, los archivos descargados de internet se bloquean por seguridad. Para ejecutar <code className="text-amber-300">iniciar_mac.command</code> sin error de privilegios:
-              </p>
-
-              <div className="bg-neutral-900 p-3 rounded-lg border border-neutral-800 space-y-2">
-                <p className="font-semibold text-white">Método más fácil:</p>
-                <ol className="list-decimal list-inside space-y-1 text-neutral-300">
-                  <li>Abre el <strong>Terminal</strong> en tu Mac.</li>
-                  <li>Escribe <code className="text-emerald-400 font-mono bg-neutral-950 px-1.5 py-0.5 rounded">bash </code> (con un espacio al final).</li>
-                  <li>Arrastra el archivo <strong>iniciar_mac.command</strong> dentro de la ventana del Terminal y pulsa <strong>Enter</strong>.</li>
-                </ol>
-              </div>
-
-              <div className="text-[11px] text-neutral-400">
-                O si prefieres darle permisos para siempre de doble clic, ejecuta esto en la carpeta:
-                <div className="flex items-center gap-2 mt-1">
-                  <code className="flex-1 font-mono text-[11px] bg-neutral-900 p-2 rounded border border-neutral-800 text-emerald-400">
-                    chmod +x iniciar_mac.command
-                  </code>
-                  <button
-                    onClick={handleCopyBashCmd}
-                    className="px-2.5 py-2 bg-neutral-800 hover:bg-neutral-700 text-neutral-200 rounded text-[11px] transition-colors cursor-pointer"
-                  >
-                    {copiedBashCmd ? 'Copiado' : 'Copiar'}
-                  </button>
-                </div>
-              </div>
-            </div>
+          {/* Mac Dock */}
+          <div className="p-3 bg-neutral-950 border border-neutral-800 rounded-xl flex items-center gap-3 text-xs text-neutral-400">
+            <Laptop className="w-5 h-5 text-amber-400 shrink-0" />
+            <p className="leading-relaxed">
+              <strong>En Mac:</strong> Abre ese mismo enlace en Safari y pulsa <strong className="text-neutral-200">Archivo &gt; Añadir al Dock…</strong> para tener el icono en tu escritorio sin tocar la terminal.
+            </p>
           </div>
         </div>
 
         {/* Footer */}
         <div className="px-6 py-4 border-t border-neutral-800 flex items-center justify-between bg-neutral-950">
-          <div className="text-[11px] text-neutral-500">
-            Cronotask v1.0
+          <div className="text-[11px] text-neutral-500 font-mono">
+            hh5342.github.io/cronotask-/
           </div>
           <button
             onClick={onClose}
             className="px-4 py-2 bg-neutral-800 hover:bg-neutral-700 text-white rounded-lg text-xs font-medium transition-colors cursor-pointer"
           >
-            Cerrar
+            Listo
           </button>
         </div>
       </div>
