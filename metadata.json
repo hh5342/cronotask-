@@ -1,0 +1,6 @@
+{
+  "name": "Cronotask - Cronómetro y Analítica de Productividad",
+  "description": "Cronometra tus sesiones de trabajo, anota avances y genera reportes automáticos y consolidados en PDF con gráficos comparativos diarios y mensuales.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
