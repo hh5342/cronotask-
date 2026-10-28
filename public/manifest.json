@@ -3,20 +3,20 @@
   "name": "Cronotask - Cronómetro y Analítica de Productividad",
   "short_name": "Cronotask",
   "description": "Cronometra tus sesiones de trabajo, anota avances y genera reportes automáticos y consolidados en PDF.",
-  "start_url": "/",
-  "scope": "/",
+  "start_url": "./",
+  "scope": "./",
   "display": "standalone",
   "background_color": "#09090b",
   "theme_color": "#09090b",
   "icons": [
     {
-      "src": "/icon.svg",
+      "src": "./icon.svg",
       "sizes": "512x512",
       "type": "image/svg+xml",
       "purpose": "any"
     },
     {
-      "src": "/icon.svg",
+      "src": "./icon.svg",
       "sizes": "192x192",
       "type": "image/svg+xml",
       "purpose": "any"
